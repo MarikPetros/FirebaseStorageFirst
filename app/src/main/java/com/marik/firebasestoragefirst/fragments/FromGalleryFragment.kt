@@ -11,7 +11,6 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
-import com.google.android.gms.tasks.Task
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.StorageReference
 import com.google.firebase.storage.ktx.storage
@@ -21,10 +20,8 @@ import kotlinx.android.synthetic.main.from_gallery.*
 class FromGalleryFragment : Fragment() {
     private lateinit var filePath: Uri
     private lateinit var mStorageRef: StorageReference
-    private lateinit var downloadUrl: Uri
+    private lateinit var downloadUri: Uri
     private lateinit var progressDialog: ProgressDialog
-
-    private lateinit var uploadFragmentListener: UploadFragmentListener
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -121,19 +118,13 @@ class FromGalleryFragment : Fragment() {
                     chaloRef.downloadUrl
                 }.addOnCompleteListener { task ->
                     if (task.isSuccessful) {
-                        val downloadUri = task.result
+                        downloadUri = task.result!!
                     } else {
                         // Handle failures
                         Toast.makeText(this.context, "upload failed!", Toast.LENGTH_LONG).show()
                     }
                 }
         }
-
-
-    }
-
-    interface UploadFragmentListener {
-        fun getFilePath(): Uri
     }
 
     companion object {
