@@ -1,27 +1,12 @@
 package com.marik.firebasestoragefirst
 
-import android.app.Activity
-import android.app.ProgressDialog
-import android.content.Intent
-import android.graphics.Bitmap
-import android.graphics.drawable.BitmapDrawable
-import android.net.Uri
 import android.os.Bundle
-import android.os.PersistableBundle
-import android.provider.MediaStore
-import android.view.View
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
-import com.google.firebase.ktx.Firebase
-import com.google.firebase.storage.ktx.storage
 import com.marik.firebasestoragefirst.fragments.FromGalleryFragment
-import kotlinx.android.synthetic.main.from_gallery.*
 
 
-class MainActivity : AppCompatActivity(), FromGalleryFragment.UploadFragmentListener {
-
-    private lateinit var filePath: Uri
+class MainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -106,10 +91,5 @@ class MainActivity : AppCompatActivity(), FromGalleryFragment.UploadFragmentList
         }
     }
 */
-
-    override fun getFilePath(): Uri {
-        return filePath
-    }
-
 }
 

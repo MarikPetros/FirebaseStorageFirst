@@ -14,7 +14,6 @@ import androidx.fragment.app.Fragment
 import com.google.android.gms.tasks.Task
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.StorageReference
-import com.google.firebase.storage.UploadTask
 import com.google.firebase.storage.ktx.storage
 import com.marik.firebasestoragefirst.R
 import kotlinx.android.synthetic.main.from_gallery.*
@@ -98,7 +97,7 @@ class FromGalleryFragment : Fragment() {
         val chaloRef: StorageReference = mStorageRef.child("images/winter.jpg")
 
         filePath.let {
-            chaloRef.putFile(it)
+           val urlTask = chaloRef.putFile(it)
                 .addOnSuccessListener(this.requireActivity()) { taskSnapshot ->
                     progressDialog.dismiss()
                     Toast.makeText(this.context, "File Uploaded!", Toast.LENGTH_LONG).show()
@@ -109,12 +108,28 @@ class FromGalleryFragment : Fragment() {
                     Toast.makeText(this.context, exception.message, Toast.LENGTH_LONG).show()
                 }
                 .addOnProgressListener(this.requireActivity()) { taskSnapshot ->
-//                    val sessionUri: Uri = taskSnapshot.uploadSessionUri!!
+        //                    val sessionUri: Uri = taskSnapshot.uploadSessionUri!!
                     val progress =
                         (100.0 * taskSnapshot.bytesTransferred) / taskSnapshot.totalByteCount
                     progressDialog.setMessage("$progress% uploaded...")
+                }.continueWithTask { task ->
+                    if (!task.isSuccessful) {
+                        task.exception?.let {
+                            throw it
+                        }
+                    }
+                    chaloRef.downloadUrl
+                }.addOnCompleteListener { task ->
+                    if (task.isSuccessful) {
+                        val downloadUri = task.result
+                    } else {
+                        // Handle failures
+                        Toast.makeText(this.context, "upload failed!", Toast.LENGTH_LONG).show()
+                    }
                 }
         }
+
+
     }
 
     interface UploadFragmentListener {
