@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name">FirebaseStorageFirst</string>
+    <string name="choose">Choose</string>
+    <string name="upload">Upload</string>
+    <string name="chosen_image">Chosen image</string>
+    <string name="text_chosen_image">Here will be the chosen image.</string>
+</resources>
