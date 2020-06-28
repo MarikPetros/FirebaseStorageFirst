@@ -4,12 +4,15 @@ import android.app.Activity
 import android.app.ProgressDialog
 import android.content.Intent
 import android.net.Uri
+import android.os.Build
 import android.os.Bundle
 import android.provider.MediaStore
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ProgressBar
 import android.widget.Toast
+import androidx.annotation.RequiresApi
 import androidx.fragment.app.Fragment
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.StorageReference
@@ -21,7 +24,6 @@ class FromGalleryFragment : Fragment() {
     private lateinit var filePath: Uri
     private lateinit var mStorageRef: StorageReference
     private lateinit var downloadUri: Uri
-    private lateinit var progressDialog: ProgressDialog
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -36,6 +38,7 @@ class FromGalleryFragment : Fragment() {
         return inflater.inflate(R.layout.from_gallery, container, false)
     }
 
+    @RequiresApi(Build.VERSION_CODES.N)
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         // Initialize mStorageRef
         mStorageRef = Firebase.storage.reference
@@ -86,29 +89,25 @@ class FromGalleryFragment : Fragment() {
         startActivityForResult(Intent.createChooser(intent, "Select an image"), PICK_IMAGE_REQUEST)
     }
 
+    @RequiresApi(Build.VERSION_CODES.N)
     private fun uploadFile() {
-        progressDialog = ProgressDialog(this.context)
-        progressDialog.setTitle("Uploading ...")
-        progressDialog.show()
-
         val chaloRef: StorageReference = mStorageRef.child("images/winter.jpg")
 
         filePath.let {
            val urlTask = chaloRef.putFile(it)
-                .addOnSuccessListener(this.requireActivity()) { taskSnapshot ->
-                    progressDialog.dismiss()
-                    Toast.makeText(this.context, "File Uploaded!", Toast.LENGTH_LONG).show()
-                }
-                .addOnFailureListener(this.requireActivity()) { exception ->
+                .addOnSuccessListener(this.requireActivity()) { _ ->
+                    progress_horizontal.visibility = View.GONE
+                    Toast.makeText(this.context, "File Uploaded!", Toast.LENGTH_LONG).show() }
+               .addOnFailureListener(this.requireActivity()) { exception ->
                     // Handle unsuccessful uploads
-                    progressDialog.dismiss()
+                   progress_horizontal.visibility = View.GONE
                     Toast.makeText(this.context, exception.message, Toast.LENGTH_LONG).show()
                 }
                 .addOnProgressListener(this.requireActivity()) { taskSnapshot ->
-        //                    val sessionUri: Uri = taskSnapshot.uploadSessionUri!!
+//                            val sessionUri: Uri = taskSnapshot.uploadSessionUri!!
                     val progress =
                         (100.0 * taskSnapshot.bytesTransferred) / taskSnapshot.totalByteCount
-                    progressDialog.setMessage("$progress% uploaded...")
+                    progress_horizontal.setProgress(progress.toInt(), true)
                 }.continueWithTask { task ->
                     if (!task.isSuccessful) {
                         task.exception?.let {
