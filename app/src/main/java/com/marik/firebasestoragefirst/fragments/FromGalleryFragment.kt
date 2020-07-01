@@ -1,22 +1,20 @@
 package com.marik.firebasestoragefirst.fragments
 
 import android.app.Activity
-import android.app.ProgressDialog
 import android.content.Intent
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
-import android.provider.MediaStore
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ProgressBar
 import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.fragment.app.Fragment
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.StorageReference
 import com.google.firebase.storage.ktx.storage
+import com.marik.firebasestoragefirst.GlideApp
 import com.marik.firebasestoragefirst.R
 import kotlinx.android.synthetic.main.from_gallery.*
 
@@ -68,17 +66,8 @@ class FromGalleryFragment : Fragment() {
             // Get file path
             filePath = data.data!!
 
-            filePath.let {
-                try {
-                    val bitmap =
-                        MediaStore.Images.Media.getBitmap(activity?.contentResolver, filePath)
-                    text_placeholder.visibility = View.GONE
-                    image.setImageBitmap(bitmap)
-                    image.visibility = View.VISIBLE
-                } catch (e: Exception) {
-                    e.localizedMessage
-                }
-            }
+            text_placeholder.visibility = View.GONE
+
         }
     }
 
@@ -94,20 +83,35 @@ class FromGalleryFragment : Fragment() {
         val chaloRef: StorageReference = mStorageRef.child("images/winter.jpg")
 
         filePath.let {
-           val urlTask = chaloRef.putFile(it)
+
+            val urlTask = chaloRef.putFile(it)
                 .addOnSuccessListener(this.requireActivity()) { _ ->
                     progress_horizontal.visibility = View.GONE
-                    Toast.makeText(this.context, "File Uploaded!", Toast.LENGTH_LONG).show() }
-               .addOnFailureListener(this.requireActivity()) { exception ->
+                    text_progress.visibility = View.GONE
+                    //  set image from storage
+                    image.visibility = View.VISIBLE
+                    GlideApp.with(this)
+                        .load(chaloRef)
+                        .fitCenter()
+                        .into(image)
+
+                    Toast.makeText(this.context, "File Uploaded!", Toast.LENGTH_LONG).show()
+                }
+                .addOnFailureListener(this.requireActivity()) { exception ->
                     // Handle unsuccessful uploads
-                   progress_horizontal.visibility = View.GONE
+                    progress_horizontal.visibility = View.GONE
+                    text_progress.visibility = View.GONE
                     Toast.makeText(this.context, exception.message, Toast.LENGTH_LONG).show()
                 }
                 .addOnProgressListener(this.requireActivity()) { taskSnapshot ->
 //                            val sessionUri: Uri = taskSnapshot.uploadSessionUri!!
                     val progress =
                         (100.0 * taskSnapshot.bytesTransferred) / taskSnapshot.totalByteCount
-                    progress_horizontal.setProgress(progress.toInt(), true)
+                    progress_horizontal.setProgress(progress.toInt(), true) // setting progress
+                    progress_horizontal.visibility = View.VISIBLE
+                    text_progress.text =
+                        "${progress.toInt()}% uploaded..."  // informing user about progress
+                    text_progress.visibility = View.VISIBLE
                 }.continueWithTask { task ->
                     if (!task.isSuccessful) {
                         task.exception?.let {
@@ -118,6 +122,7 @@ class FromGalleryFragment : Fragment() {
                 }.addOnCompleteListener { task ->
                     if (task.isSuccessful) {
                         downloadUri = task.result!!
+                        // todo save uri if needed
                     } else {
                         // Handle failures
                         Toast.makeText(this.context, "upload failed!", Toast.LENGTH_LONG).show()
