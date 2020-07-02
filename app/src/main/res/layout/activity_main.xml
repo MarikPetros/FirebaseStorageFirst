@@ -1,64 +1,34 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.viewpager.widget.ViewPager xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/viewpager"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
-<!--    tools:context=".ui.FindMyStamp">-->
-
-    <com.google.android.material.appbar.AppBarLayout
-        android:id="@+id/appBarLayout"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
-        app:layout_constraintBottom_toTopOf="@+id/fragment_container"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
-
 
         <com.google.android.material.tabs.TabLayout
             android:id="@+id/tabs"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            style="@style/Widget.Design.TabLayout"
             app:tabBackground="@color/colorPrimary"
             app:tabGravity="fill"
+            app:tabIndicatorFullWidth="true"
+            app:tabTextAppearance="@style/TextAppearance.AppCompat.Headline"
+            app:tabMaxWidth="400dp"
+            app:tabRippleColor="@color/colorAccent"
             app:tabMode="fixed"
-            app:tabTextColor="@android:color/white">
+            app:tabSelectedTextColor="@android:color/white"
+            app:tabTextColor="@color/inactiveTab">
 
-            <com.google.android.material.tabs.TabItem
-                android:icon="@drawable/ic_menu_camera"
-                android:elevation="@dimen/elevation"
-                android:layout_height="wrap_content"
-                android:layout_width="match_parent" />
-
-            <com.google.android.material.tabs.TabItem
-                android:elevation="@dimen/elevation"
-                android:icon="@drawable/ic_menu_gallery"
-                android:layout_height="wrap_content"
-                android:layout_width="match_parent" />
-
-            <!--<com.google.android.material.tabs.TabItem
-                android:icon="@drawable/ic_favorite_white_24dp"
-                android:elevation="@dimen/elevation"
-                android:layout_height="wrap_content"
-                android:layout_width="match_parent" />
-
-            <com.google.android.material.tabs.TabItem
-                android:icon="@drawable/ic_help_white_24dp"
-                android:elevation="@dimen/elevation"
-                android:layout_height="wrap_content"
-                android:layout_width="match_parent" />-->
         </com.google.android.material.tabs.TabLayout>
-    </com.google.android.material.appbar.AppBarLayout>
 
     <LinearLayout
         android:id="@+id/fragment_container"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/appBarLayout"
-        app:layout_constraintBottom_toBottomOf="parent"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:orientation="vertical" />
-</androidx.constraintlayout.widget.ConstraintLayout>
+        android:orientation="vertical"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/appBarLayout" />
+</androidx.viewpager.widget.ViewPager>

@@ -3,7 +3,12 @@ package com.marik.firebasestoragefirst
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentManager
+import androidx.fragment.app.FragmentPagerAdapter
+import com.google.android.material.tabs.TabLayout
 import com.marik.firebasestoragefirst.fragments.FromGalleryFragment
+import com.marik.firebasestoragefirst.fragments.MyPhotosFragment
+import kotlinx.android.synthetic.main.activity_main.*
 
 
 class MainActivity : AppCompatActivity() {
@@ -20,16 +25,10 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun init() {
-        // Set initial fragment
-        val fromGallery = FromGalleryFragment()
-        replaceFragment(fromGallery)
-    }
+        val adapter = FPAdapter(supportFragmentManager, 1)
+        viewpager.adapter = adapter
+        viewpager.currentItem = 0
 
-    private fun replaceFragment(fragment: Fragment) {
-        val fragmentManager = supportFragmentManager
-        val transaction = fragmentManager.beginTransaction()
-        transaction.replace(R.id.fragment_container, fragment)
-        transaction.commit()
     }
 
 /*
@@ -89,7 +88,28 @@ class MainActivity : AppCompatActivity() {
                     progressDialog.setMessage("$progress% uploaded...")
                 }
         }
+    }*/
+}
+
+class FPAdapter(fm: FragmentManager, behavior: Int) :
+    FragmentPagerAdapter(fm, behavior) {
+    override fun getItem(position: Int): Fragment {
+        return when(position){
+            0 -> FromGalleryFragment()
+            1 -> MyPhotosFragment()
+            else -> FromGalleryFragment()
+        }
     }
-*/
+
+    override fun getCount(): Int {
+        return  2
+    }
+
+    override fun getPageTitle(position: Int): CharSequence? {
+        return if (position == 0) "Choose image"
+        else "My photos"
+    }
+
+
 }
 

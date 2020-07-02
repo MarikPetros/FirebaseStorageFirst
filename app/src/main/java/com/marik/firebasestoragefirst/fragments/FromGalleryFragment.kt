@@ -11,10 +11,10 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.fragment.app.Fragment
+import com.bumptech.glide.Glide
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.StorageReference
 import com.google.firebase.storage.ktx.storage
-import com.marik.firebasestoragefirst.GlideApp
 import com.marik.firebasestoragefirst.R
 import kotlinx.android.synthetic.main.from_gallery.*
 
@@ -25,7 +25,7 @@ class FromGalleryFragment : Fragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-//        retainInstance = true
+        retainInstance = true
     }
 
     override fun onCreateView(
@@ -66,8 +66,18 @@ class FromGalleryFragment : Fragment() {
             // Get file path
             filePath = data.data!!
 
-            text_placeholder.visibility = View.GONE
+            filePath.let {
+                try {
+                    Glide.with(this)
+                        .load(filePath)
+                        .fitCenter()
+                        .into(image)
 
+                    image.visibility = View.VISIBLE
+                } catch (e: Exception) {
+                    e.localizedMessage
+                }
+            }
         }
     }
 
@@ -80,21 +90,21 @@ class FromGalleryFragment : Fragment() {
 
     @RequiresApi(Build.VERSION_CODES.N)
     private fun uploadFile() {
-        val chaloRef: StorageReference = mStorageRef.child("images/winter.jpg")
+        val reference: StorageReference = mStorageRef.child("images/${filePath.path}.jpg")
 
         filePath.let {
-
-            val urlTask = chaloRef.putFile(it)
+            val urlTask = reference.putFile(it)
                 .addOnSuccessListener(this.requireActivity()) { _ ->
                     progress_horizontal.visibility = View.GONE
                     text_progress.visibility = View.GONE
+/*
                     //  set image from storage
                     image.visibility = View.VISIBLE
                     GlideApp.with(this)
                         .load(chaloRef)
                         .fitCenter()
                         .into(image)
-
+*/
                     Toast.makeText(this.context, "File Uploaded!", Toast.LENGTH_LONG).show()
                 }
                 .addOnFailureListener(this.requireActivity()) { exception ->
@@ -118,7 +128,7 @@ class FromGalleryFragment : Fragment() {
                             throw it
                         }
                     }
-                    chaloRef.downloadUrl
+                    reference.downloadUrl
                 }.addOnCompleteListener { task ->
                     if (task.isSuccessful) {
                         downloadUri = task.result!!
