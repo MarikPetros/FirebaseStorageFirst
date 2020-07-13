@@ -4,4 +4,9 @@
     <string name="upload">Upload</string>
     <string name="chosen_image">Chosen image</string>
     <string name="text_chosen_image">Here will be the chosen image.</string>
+    <string name="user_login">User login</string>
+    <string name="enter_your_email">Enter your email</string>
+    <string name="enter_your_password">Enter your password</string>
+    <string name="signIn">Sign in</string>
+    <string name="not_have_an_account_sign_up_here">Not have an account? Sign up here</string>
 </resources>

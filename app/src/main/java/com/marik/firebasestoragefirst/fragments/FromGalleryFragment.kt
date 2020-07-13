@@ -74,6 +74,7 @@ class FromGalleryFragment : Fragment() {
                         .into(image)
 
                     image.visibility = View.VISIBLE
+                    text_placeholder.visibility = View.GONE
                 } catch (e: Exception) {
                     e.localizedMessage
                 }
