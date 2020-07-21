@@ -1,11 +1,11 @@
-package com.marik.firebasestoragefirst
+package com.marik.firebasestoragefirst.activities
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentPagerAdapter
-import com.google.android.material.tabs.TabLayout
+import com.marik.firebasestoragefirst.R
 import com.marik.firebasestoragefirst.fragments.FromGalleryFragment
 import com.marik.firebasestoragefirst.fragments.MyPhotosFragment
 import kotlinx.android.synthetic.main.activity_main.*
@@ -25,7 +25,10 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun init() {
-        val adapter = FPAdapter(supportFragmentManager, 1)
+        val adapter = FPAdapter(
+            supportFragmentManager,
+            1
+        )
         viewpager.adapter = adapter
         viewpager.currentItem = 0
 

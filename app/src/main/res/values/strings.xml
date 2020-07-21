@@ -9,4 +9,7 @@
     <string name="enter_your_password">Enter your password</string>
     <string name="signIn">Sign in</string>
     <string name="not_have_an_account_sign_up_here">Not have an account? Sign up here</string>
+    <string name="user_registration">User registration</string>
+    <string name="register_user">Register user</string>
+    <string name="already_registered_sign_in_here">Already registered? Sign in here.</string>
 </resources>

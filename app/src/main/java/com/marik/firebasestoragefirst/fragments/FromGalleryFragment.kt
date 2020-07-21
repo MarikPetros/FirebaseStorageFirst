@@ -16,6 +16,8 @@ import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.StorageReference
 import com.google.firebase.storage.ktx.storage
 import com.marik.firebasestoragefirst.R
+import com.marik.firebasestoragefirst.activities.LoginActivity
+import com.marik.firebasestoragefirst.activities.RegisterActivity
 import kotlinx.android.synthetic.main.from_gallery.*
 
 class FromGalleryFragment : Fragment() {
@@ -91,7 +93,9 @@ class FromGalleryFragment : Fragment() {
 
     @RequiresApi(Build.VERSION_CODES.N)
     private fun uploadFile() {
-        val reference: StorageReference = mStorageRef.child("images/${filePath.path}.jpg")
+        val reference: StorageReference = if (LoginActivity.firebaseAuth.currentUser != null)
+            mStorageRef.child("${LoginActivity.firebaseAuth.currentUser?.uid}/${filePath.path}.jpg")
+        else mStorageRef.child("${RegisterActivity.firebaseAuth.currentUser?.uid}/${filePath.path}.jpg")
 
         filePath.let {
             val urlTask = reference.putFile(it)
@@ -123,7 +127,7 @@ class FromGalleryFragment : Fragment() {
                     text_progress.text =
                         "${progress.toInt()}% uploaded..."  // informing user about progress
                     text_progress.visibility = View.VISIBLE
-                }.continueWithTask { task ->
+                }/*.continueWithTask { task ->
                     if (!task.isSuccessful) {
                         task.exception?.let {
                             throw it
@@ -138,7 +142,10 @@ class FromGalleryFragment : Fragment() {
                         // Handle failures
                         Toast.makeText(this.context, "upload failed!", Toast.LENGTH_LONG).show()
                     }
-                }
+
+                    QkOzDLm4u0XYQ5i36BwMoYv29qr2
+
+                }*/
         }
     }
 
